@@ -1,7 +1,9 @@
-package com.greenhand.game73;
+package com.greenhand.game73.fm.home;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.greenhand.game73.R;
 
 public class MainActivity extends AppCompatActivity {
 
