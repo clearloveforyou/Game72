@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Game73</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="main_tab_home">首页</string>
+    <string name="main_tab_product">尖货</string>
+    <string name="tab_main_category">分类</string>
+    <string name="tab_mian_car">购物车</string>
+    <string name="tab_main_mine">我的</string>
 </resources>

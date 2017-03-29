@@ -17,4 +17,14 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
+    <!--定义主页tab的样式：宽 高 权重 button 字体大小 -->
+    <style name="MainTab">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:button">@null</item>
+        <item name="android:textSize">@dimen/font_14</item>
+        <item name="android:gravity">center</item>
+    </style>
+
 </resources>
