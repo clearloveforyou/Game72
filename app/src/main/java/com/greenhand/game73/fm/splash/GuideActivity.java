@@ -1,6 +1,7 @@
 package com.greenhand.game73.fm.splash;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -14,6 +15,8 @@ import android.widget.LinearLayout;
 
 import com.greenhand.game73.R;
 import com.greenhand.game73.fm.home.MainActivity;
+import com.rd.PageIndicatorView;
+import com.rd.animation.AnimationType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +25,7 @@ public class GuideActivity extends AppCompatActivity {
 
     private ViewPager vpGuide;
     private LinearLayout liDots;
-//    private PageIndicatorView indicator;
+    private PageIndicatorView indicator;
     private Button btnGomain;
     private List<ImageView> imgList;
     private ImageView[] imgs;
@@ -68,16 +71,16 @@ public class GuideActivity extends AppCompatActivity {
         vpGuide = (ViewPager) findViewById(R.id.vp_guide);
         liDots = (LinearLayout) findViewById(R.id.line_dots);
         btnGomain = (Button) findViewById(R.id.btn_gomain);
-//        indicator = (PageIndicatorView) findViewById(R.id.indator);
+        indicator = (PageIndicatorView) findViewById(R.id.indator);
         //
         creatDots(imgList.size());
         //
         GuidePagerAdapter adapter = new GuidePagerAdapter(imgList);
         vpGuide.setAdapter(adapter);
-//        //关联指示器（测试三方控件）
-//        indicator.setViewPager(vpGuide);
-//        //设置指示器属性
-//        setIndicator();
+        //关联指示器（测试三方控件）
+        indicator.setViewPager(vpGuide);
+        //设置指示器属性
+        setIndicator();
         vpGuide.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -121,28 +124,28 @@ public class GuideActivity extends AppCompatActivity {
         });
     }
 
-//    private void setIndicator() {
-//
-//        indicator.setCount(imgList.size());//设置点的数目,一定要对应vp数目，否则无效
-//        indicator.setDynamicCount(true);//没看出效果？？？
-//
-//        indicator.setRadius(8);//设置圆形指示器的半径
-//        indicator.setPadding(5);//设置圆形指示器间距
-//        indicator.setStrokeWidth(10);//没看出效果？？？？
-//
-//        indicator.setUnselectedColor(Color.GRAY);//未选中颜色
-//        indicator.setSelectedColor(Color.RED);//选中颜色
-//
-//
-//        indicator.setAnimationDuration(1000);//设置动画时长，默认的不设置挺好
-//        indicator.setAnimationType(AnimationType.DROP);//设置动画效果
-////        indicator.setInteractiveAnimation(true);//开启动画加速
-//
-////        indicator.setProgress(2,6);
-////        indicator.setSelection(2);
-////// set orientation
-////        app:orientation="{vertical||horizontal}"
-//    }
+    private void setIndicator() {
+
+        indicator.setCount(imgList.size());//设置点的数目,一定要对应vp数目，否则无效
+        indicator.setDynamicCount(true);//没看出效果？？？
+
+        indicator.setRadius(8);//设置圆形指示器的半径
+        indicator.setPadding(5);//设置圆形指示器间距
+        indicator.setStrokeWidth(10);//没看出效果？？？？
+
+        indicator.setUnselectedColor(Color.GRAY);//未选中颜色
+        indicator.setSelectedColor(Color.RED);//选中颜色
+
+
+        indicator.setAnimationDuration(1000);//设置动画时长，默认的不设置挺好
+        indicator.setAnimationType(AnimationType.DROP);//设置动画效果
+//        indicator.setInteractiveAnimation(true);//开启动画加速
+
+//        indicator.setProgress(2,6);
+//        indicator.setSelection(2);
+//// set orientation
+//        app:orientation="{vertical||horizontal}"
+    }
 
     /**
      * 创建指示器
