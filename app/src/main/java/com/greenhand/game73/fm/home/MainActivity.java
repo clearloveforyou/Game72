@@ -1,69 +1,43 @@
 package com.greenhand.game73.fm.home;
 
+import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.greenhand.game73.R;
 import com.greenhand.game73.okhttp.OkHttpUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+/**
+ * 加载Fragment
+ * 解决Fragment show和hide时的重叠问题
+ */
+public class MainActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener {
 
-public class MainActivity extends AppCompatActivity {
-
+    private RadioGroup rgMain;
     private static final String STATE_FRAGMENT_SHOW = "state";//内存不足重启时的当前fragment
     private Fragment homeFragment, productFragment, categoryFragment, carFragment, mineFragment;
-    private Fragment currentFragment;//当前Fragment
+    private Fragment currentFragment = new Fragment();//当前Fragment
+
+    private Fragment menuFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         //初始化控件
         initView();
-        //增加fragment
-        chooseFragment(savedInstanceState);
-
-    }
-
-    private void initView() {
-
-
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-
-        //“内存重启”时保存当前的fragment名字
-        if (currentFragment != null){
-            outState.putString(STATE_FRAGMENT_SHOW, currentFragment.getClass().getName());
-        }
-        super.onSaveInstanceState(outState);
-    }
-
-    /**
-     * 这个方法主用用于解决由于“内存重启”造成的Fragment重叠的问题，以及保存了重启后fragment是之前的状态：
-     * 1.判断savedInstanceState是否为空
-     * 不为空：正常的启动，那就正常初始化fragment：即调用：initTab();
-     * 为空：判断savename是否为空
-     * 为空：取出FragmentManager自动保存的fragment，
-     * （注意判断fragment是否为空，因为没点击的tab,我们没加载fragment，也就没设Tag）
-     * 显示首页fragment，隐藏其他页
-     * 不为空： 设为tag为savename的fragment显示，
-     * 其他不为空的fragment隐藏。
-     *
-     * @param savedInstanceState
-     */
-    private void chooseFragment(Bundle savedInstanceState) {
-
-        //内存重启时的判断：
-        if (savedInstanceState != null) {
-
-            //获取“内存重启”时保存的fragment名字
+        if (savedInstanceState == null) {
+            //正常的加载，初始化tab
+            initTab();
+        } else {
+            //否则就是内存重启的情况：
+            //先获取“内存重启”时保存的fragment名字
             String saveName = savedInstanceState.getString(STATE_FRAGMENT_SHOW);
             //由Tag取出Fragment
             homeFragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.class.getName());
@@ -71,71 +45,133 @@ public class MainActivity extends AppCompatActivity {
             categoryFragment = getSupportFragmentManager().findFragmentByTag(CategoryFragment.class.getName());
             carFragment = getSupportFragmentManager().findFragmentByTag(CarFragment.class.getName());
             mineFragment = getSupportFragmentManager().findFragmentByTag(MineFragment.class.getName());
-            //放入list(便于判断)
-            List<Fragment> fragments = new ArrayList<>();
-            fragments.add(homeFragment);
-            fragments.add(productFragment);
-            fragments.add(categoryFragment);
-            fragments.add(carFragment);
-            fragments.add(mineFragment);
-
+            //创建数组，便于判断
+            Fragment[] fragments = new Fragment[]{homeFragment, productFragment, categoryFragment, carFragment, mineFragment};
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            //如果为空，只解决内存重启时的重叠问题
-            if (TextUtils.isEmpty(saveName)) {
-                //首页比不为空，显示
-                transaction.show(homeFragment);
-                for (int i = 1, len = fragments.size(); i < len; i++) {
-                    if (fragments.get(i) != null) {
-                        //隐藏不为空的fragment（为空即为：从来没有add过）
-                        transaction.hide(fragments.get(i));
+
+            for (int i = 0, len = fragments.length; i < len; i++) {
+                Fragment fragment = fragments[i];
+                if (fragment != null) {
+                    //如果与保存的fragment名字一样，设为show
+                    if (TextUtils.equals(saveName, fragment.getClass().getName())) {
+                        transaction.show(fragment);
+                        //记录当前fragment
+                        currentFragment = fragment;
+                        RadioButton rb = (RadioButton) rgMain.getChildAt(i);
+                        rb.setChecked(true);
+                    } else {
+                        //否则隐藏
+                        transaction.hide(fragment);
                     }
                 }
-                currentFragment = homeFragment;//记录当前fragment
-                transaction.commit();
-            } else {
-
-                for (int i = 0, len = fragments.size(); i < len; i++) {
-                    Fragment fragment = fragments.get(i);
-                    if (fragment != null) {
-                        if (TextUtils.equals(saveName, fragment.getClass().getName())) {
-                            transaction.show(fragment);
-                            //记录当前fragment
-                            currentFragment = fragment;
-                        } else {
-                            transaction.hide(fragment);
-                        }
-                    }
-                }
-                transaction.commit();
-
             }
-
-        } else {
-            //正常启动
-            //TODO
+            transaction.commit();
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        //在activity销毁时，保存当前fragment的名字，以便恢复
+        outState.putString(STATE_FRAGMENT_SHOW, currentFragment.getClass().getName());
+        super.onSaveInstanceState(outState);
+    }
+
+    /**
+     * 初始化tab
+     */
+    private void initTab() {
+
+        RadioButton rbtHome = (RadioButton) findViewById(R.id.rbt_main_home);
+        rbtHome.setChecked(true);
+    }
+
+    private void initView() {
+
+        rgMain = (RadioGroup) findViewById(R.id.rg_mian);
+        rgMain.setOnCheckedChangeListener(this);
+
+        //初始化侧滑菜单的Fragment
+        menuFragment = MenuFragment.newInstance("", "");
+        initMenuFragment();
+
+    }
+
+    private void initMenuFragment() {
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.main_draw_container, menuFragment)
+                .commit();
+    }
+
+    @Override
+    public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+        switch (checkedId) {
+
+            case R.id.rbt_main_home:
+                if (homeFragment == null) {
+                    homeFragment = HomeFragment.newInstance("", "");
+                }
+                addOrShowFragment(getSupportFragmentManager(), homeFragment);
+                break;
+            case R.id.rbt_main_product:
+                if (productFragment == null) {
+                    productFragment = ProductFragment.newInstance("", "");
+                }
+                addOrShowFragment(getSupportFragmentManager(), productFragment);
+                break;
+            case R.id.rbt_main_category:
+                if (categoryFragment == null) {
+                    categoryFragment = CategoryFragment.newInstance("", "");
+                }
+                addOrShowFragment(getSupportFragmentManager(), categoryFragment);
+                break;
+            case R.id.rbt_main_car:
+                if (carFragment == null) {
+                    carFragment = CarFragment.newInstance("", "");
+                }
+                addOrShowFragment(getSupportFragmentManager(), carFragment);
+                break;
+            case R.id.rbt_main_mine:
+                if (mineFragment == null) {
+                    mineFragment = MineFragment.newInstance("", "");
+                }
+                addOrShowFragment(getSupportFragmentManager(), mineFragment);
+                break;
+        }
+
+    }
 
 
     /**
-     * 添加或者显示碎片
+     * fragment的切换
      *
-     * @param transaction
+     * @param manager
      * @param fragment
      */
-    private void addOrShowFragment(FragmentTransaction transaction, Fragment fragment) {
+    private void addOrShowFragment(FragmentManager manager, Fragment fragment) {
+
+        FragmentTransaction transaction = manager.beginTransaction();
         if (currentFragment == fragment)
             return;
 
-        if (!fragment.isAdded()) { // 如果当前fragment未被添加，则添加到Fragment管理器中
-            transaction.hide(currentFragment)//给Fragment设置tag
-                    .add(R.id.main_fragment_container, fragment, fragment.getClass().getName()).commit();
+        /**
+         * 如果当前fragment未被添加，则添加到Fragment管理器中,隐藏上一个fragment
+         * 否则隐藏当前，显示传进来的fragment
+         */
+        if (!fragment.isAdded()) {
+            transaction
+                    .hide(currentFragment)//给Fragment设置tag
+                    .add(R.id.main_fragment_container, fragment, fragment.getClass().getName());
         } else {
-            transaction.hide(currentFragment).show(fragment).commit();
+            transaction
+                    .hide(currentFragment)
+                    .show(fragment);
         }
-
+        //重新给当前fragment赋值
         currentFragment = fragment;
+        //提交事务
+        transaction.commit();
     }
 
     @Override

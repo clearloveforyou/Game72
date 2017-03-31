@@ -1,14 +1,41 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.greenhand.game73.fm.home.HomeFragment"
-    android:background="@android:color/holo_red_dark">
+    tools:context="com.greenhand.game73.fm.home.HomeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout
+        android:id="@+id/line_bar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@android:color/black">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_sidebar_menu"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_home_topbar"
+            android:layout_centerInParent="true"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_home_top_search"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"/>
+
+    </RelativeLayout>
+    <FrameLayout
+        android:id="@+id/home_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="11111111111111111111" />
+        android:background="@android:color/holo_blue_light"
+        android:layout_below="@id/line_bar"/>
 
-</FrameLayout>
+
+</RelativeLayout>

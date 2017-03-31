@@ -1,24 +1,29 @@
 package com.greenhand.game73.fm.home;
 
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 
 import com.greenhand.game73.R;
 import com.greenhand.game73.base.BaseFragment;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link HomeFragment#newInstance} factory method to
+ * Use the {@link MenuFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomeFragment extends BaseFragment {
+public class MenuFragment extends BaseFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -29,9 +34,12 @@ public class HomeFragment extends BaseFragment {
     private String mParam2;
 
 
-    private View viewRoot;
+    private ListView lvSetting;
+    private View rootView;
+    private String[] data;
+    private List<Map<String, Object>> lists;
 
-    public HomeFragment() {
+    public MenuFragment() {
         // Required empty public constructor
     }
 
@@ -41,11 +49,11 @@ public class HomeFragment extends BaseFragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment HomeFragment.
+     * @return A new instance of fragment MenuFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static HomeFragment newInstance(String param1, String param2) {
-        HomeFragment fragment = new HomeFragment();
+    public static MenuFragment newInstance(String param1, String param2) {
+        MenuFragment fragment = new MenuFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -66,14 +74,36 @@ public class HomeFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        viewRoot = inflater.inflate(R.layout.fragment_home, container, false);
-        return viewRoot;
+        rootView = inflater.inflate(R.layout.fragment_menu, container, false);
+        return rootView;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        initData();
+        initView();
     }
 
+    private void initData() {
+
+        data = new String[]{"男士频道", "女士频道", "跨境体验店", "寺库频道", "库管家", "寺库豪车"};
+        lists = new ArrayList<>();
+        for (int i = 0, len = data.length; i < len; i++) {
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("desc", data[i]);
+            map.put("src", R.mipmap.tab_mine_arrow_right);
+            lists.add(map);
+        }
+    }
+
+    private void initView() {
+
+        lvSetting = (ListView) rootView.findViewById(R.id.lv_menu);
+        //
+        SimpleAdapter adapter = new SimpleAdapter(getActivity(), lists,
+                R.layout.item_slide_menu, new String[]{"desc", "src"}, new int[]{R.id.txt_item_desc, R.id.img_item_go});
+        lvSetting.setAdapter(adapter);
+    }
 }

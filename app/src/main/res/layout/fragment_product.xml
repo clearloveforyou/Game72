@@ -2,8 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.greenhand.game73.fm.home.ProductFragment"
-    android:background="@android:color/holo_green_dark">
+    tools:context="com.greenhand.game73.fm.home.ProductFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView

@@ -8,13 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.greenhand.game73.R;
+import com.greenhand.game73.base.BaseFragment;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link ProductFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ProductFragment extends Fragment {
+public class ProductFragment extends BaseFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
