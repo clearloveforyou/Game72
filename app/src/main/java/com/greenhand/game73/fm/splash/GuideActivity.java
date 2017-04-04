@@ -1,17 +1,20 @@
 package com.greenhand.game73.fm.splash;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.greenhand.game73.R;
 import com.greenhand.game73.fm.home.MainActivity;
@@ -24,12 +27,10 @@ import java.util.List;
 public class GuideActivity extends AppCompatActivity {
 
     private ViewPager vpGuide;
-    private LinearLayout liDots;
     private PageIndicatorView indicator;
-    private Button btnGomain;
-    private List<ImageView> imgList;
-    private ImageView[] imgs;
-    private int currentPager;//当前页
+    private List<View> lists;
+    private ImageView imgWatch, imgStar, imgGoes, imgWater, imgLock, imgWhite, imgOpen, imgClose, imgHand;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,28 +55,56 @@ public class GuideActivity extends AppCompatActivity {
      */
     private void creatImg() {
 
-        imgList = new ArrayList<>();
-        int[] res = new int[]{R.mipmap.guide_bg1, R.mipmap.guide_bg2, R.mipmap.guide_bg3, R.mipmap.guide_bg4};
-        for (int i = 0, len = res.length; i < len; i++) {
+//        imgList = new ArrayList<>();
+//        int[] res = new int[]{R.mipmap.guide_bg1, R.mipmap.guide_bg2, R.mipmap.guide_bg3, R.mipmap.guide_bg4};
+//        for (int i = 0, len = res.length; i < len; i++) {
+//
+//            ImageView img = new ImageView(this);
+//            img.setImageResource(res[i]);
+//            img.setScaleType(ImageView.ScaleType.FIT_XY);
+//            imgList.add(img);
+//        }
 
-            ImageView img = new ImageView(this);
-            img.setImageResource(res[i]);
-            img.setScaleType(ImageView.ScaleType.FIT_XY);
-            imgList.add(img);
-        }
+        lists = new ArrayList<>();
+
+        //加载第一个View
+        View view = LayoutInflater.from(this).inflate(R.layout.view_guide1, null);
+        imgWatch = (ImageView) view.findViewById(R.id.img_guide_watch);
+        imgStar = (ImageView) view.findViewById(R.id.img__guide_star);
+
+        View view2 = LayoutInflater.from(this).inflate(R.layout.view_guide2, null);
+        imgGoes = (ImageView) view2.findViewById(R.id.img__guide_goes);
+        imgWater = (ImageView) view2.findViewById(R.id.img__guide_water);
+
+        View view3 = LayoutInflater.from(this).inflate(R.layout.view_guide3, null);
+        imgLock = (ImageView) view3.findViewById(R.id.img__guide_lock);
+        imgWhite = (ImageView) view3.findViewById(R.id.img__guide_white);
+
+        View view4 = LayoutInflater.from(this).inflate(R.layout.view_guide4, null);
+        imgOpen = (ImageView) view4.findViewById(R.id.img__guide_second);
+        imgClose = (ImageView) view4.findViewById(R.id.img__guide_normal);
+        imgHand = (ImageView) view4.findViewById(R.id.img__guide_thumb);
+
+        imgHand.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                animator4();
+            }
+        });
+
+        lists.add(view);
+        lists.add(view2);
+        lists.add(view3);
+        lists.add(view4);
+
 
     }
 
     private void intView() {
 
         vpGuide = (ViewPager) findViewById(R.id.vp_guide);
-        liDots = (LinearLayout) findViewById(R.id.line_dots);
-        btnGomain = (Button) findViewById(R.id.btn_gomain);
         indicator = (PageIndicatorView) findViewById(R.id.indator);
-        //
-        creatDots(imgList.size());
-        //
-        GuidePagerAdapter adapter = new GuidePagerAdapter(imgList);
+        GuidePagerAdapter adapter = new GuidePagerAdapter(lists);
         vpGuide.setAdapter(adapter);
         //关联指示器（测试三方控件）
         indicator.setViewPager(vpGuide);
@@ -89,22 +118,21 @@ public class GuideActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                //
-                if (currentPager == position){
-                    return;
-                } else {
-                    imgs[currentPager].setImageResource(R.drawable.dot_default);
-                    imgs[position].setImageResource(R.drawable.dot_ok);
-                }
-                //设一个跳转的button,只在第最后一页出现
-                if (position == 3){
-                    btnGomain.setVisibility(View.VISIBLE);
-                } else {
-                    btnGomain.setVisibility(View.GONE);
-                }
-                //当前位置
-                currentPager = position;
 
+                switch (position){
+
+                    case 0:
+                        animator1();
+                        break;
+                    case 1:
+                        animator2();
+                        break;
+                    case 2:
+                        animator3();
+                        break;
+                    case 3:
+                        break;
+                }
             }
 
             @Override
@@ -112,32 +140,22 @@ public class GuideActivity extends AppCompatActivity {
 
             }
         });
-
-        btnGomain.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //跳转到main
-                Intent intent = new Intent(GuideActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
     }
 
     private void setIndicator() {
 
-        indicator.setCount(imgList.size());//设置点的数目,一定要对应vp数目，否则无效
+        indicator.setCount(lists.size());//设置点的数目,一定要对应vp数目，否则无效
         indicator.setDynamicCount(true);//没看出效果？？？
 
-        indicator.setRadius(8);//设置圆形指示器的半径
-        indicator.setPadding(5);//设置圆形指示器间距
+        indicator.setRadius(5);//设置圆形指示器的半径
+        indicator.setPadding(4);//设置圆形指示器间距
         indicator.setStrokeWidth(10);//没看出效果？？？？
 
         indicator.setUnselectedColor(Color.GRAY);//未选中颜色
-        indicator.setSelectedColor(Color.RED);//选中颜色
+        indicator.setSelectedColor(Color.WHITE);//选中颜色
 
 
-        indicator.setAnimationDuration(1000);//设置动画时长，默认的不设置挺好
+//        indicator.setAnimationDuration(1000);//设置动画时长，默认的不设置挺好
         indicator.setAnimationType(AnimationType.DROP);//设置动画效果
 //        indicator.setInteractiveAnimation(true);//开启动画加速
 
@@ -147,30 +165,66 @@ public class GuideActivity extends AppCompatActivity {
 //        app:orientation="{vertical||horizontal}"
     }
 
-    /**
-     * 创建指示器
-     *
-     * @param n
-     */
-    private void creatDots(int n) {
+//    /**
+//     * 创建指示器
+//     *
+//     * @param n
+//     */
+//    private void creatDots(int n) {
+//
+//        imgs = new ImageView[n];
+//        for (int i = 0;i<n;i++){
+//
+//            ImageView img = new ImageView(this);
+//            if (i == 0){
+//                img.setImageResource(R.drawable.dot_ok);
+//            }else {
+//                img.setImageResource(R.drawable.dot_default);
+//            }
+//
+//            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(15, 15);
+//            params.setMargins(10, 0, 10, 0);
+//
+//            liDots.addView(img,params);
+//            imgs[i] = (ImageView) liDots.getChildAt(i);
+//        }
+//
+//    }
 
-        imgs = new ImageView[n];
-        for (int i = 0;i<n;i++){
+    private void animator1(){
+        ObjectAnimator.ofFloat(imgWatch,"translationX",-5f).setDuration(1500).start();
+        ObjectAnimator.ofFloat(imgStar,"translationX",10f).setDuration(1500).start();
+    }
 
-            ImageView img = new ImageView(this);
-            if (i == 0){
-                img.setImageResource(R.drawable.dot_ok);
-            }else {
-                img.setImageResource(R.drawable.dot_default);
+    private void animator2(){
+
+        ObjectAnimator.ofFloat(imgGoes,"translationY",-5f).setDuration(1500).start();
+        ObjectAnimator.ofFloat(imgWater,"translationY",10f).setDuration(1500).start();
+    }
+
+    private void animator3(){
+
+        ObjectAnimator.ofFloat(imgLock,"translationY",-5f).setDuration(1500).start();
+        ObjectAnimator.ofFloat(imgWhite,"translationY",10f).setDuration(1500).start();
+    }
+
+    private void animator4(){
+
+        AnimatorSet set = new AnimatorSet();
+        ObjectAnimator alpha = ObjectAnimator.ofFloat(imgClose, "alpha", 1f, 0f);
+        ObjectAnimator x = ObjectAnimator.ofFloat(imgHand, "translationX", -imgClose.getWidth());
+        set.setDuration(1500).playTogether(alpha,x);
+        set.start();
+        set.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                //跳转到main
+                Intent intent = new Intent(GuideActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
             }
-
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(15, 15);
-            params.setMargins(10, 0, 10, 0);
-
-            liDots.addView(img,params);
-            imgs[i] = (ImageView) liDots.getChildAt(i);
-        }
-
+        });
     }
 
     /**
@@ -183,9 +237,9 @@ public class GuideActivity extends AppCompatActivity {
          *
          * @return
          */
-        private List<ImageView> lists;
+        private List<View> lists;
 
-        public GuidePagerAdapter(List<ImageView> lists) {
+        public GuidePagerAdapter(List<View> lists) {
             this.lists = lists;
         }
 
