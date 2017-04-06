@@ -1,21 +1,22 @@
-package com.greenhand.game73.fm.home;
+package com.greenhand.game73.fm.home.product;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 
 import com.greenhand.game73.R;
-import com.greenhand.game73.base.BaseFragment;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link ProductFragment#newInstance} factory method to
+ * Use the {@link MasterFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ProductFragment extends BaseFragment {
+public class MasterFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -26,8 +27,9 @@ public class ProductFragment extends BaseFragment {
     private String mParam2;
 
 
-    public ProductFragment() {
+    public MasterFragment() {
         // Required empty public constructor
+
     }
 
     /**
@@ -36,11 +38,11 @@ public class ProductFragment extends BaseFragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment ProductFragment.
+     * @return A new instance of fragment MasterFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ProductFragment newInstance(String param1, String param2) {
-        ProductFragment fragment = new ProductFragment();
+    public static MasterFragment newInstance(String param1, String param2) {
+        MasterFragment fragment = new MasterFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -61,7 +63,7 @@ public class ProductFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_product, container, false);
+        return inflater.inflate(R.layout.fragment_master, container, false);
     }
 
 }

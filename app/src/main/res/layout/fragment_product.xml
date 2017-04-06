@@ -1,13 +1,19 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.greenhand.game73.fm.home.ProductFragment">
+    tools:context="com.greenhand.game73.fm.home.product.ProductFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tab_product"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@android:color/black"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_product"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="2222222222222222222" />
+        android:layout_below="@id/tab_product"/>
 
-</FrameLayout>
+</RelativeLayout>

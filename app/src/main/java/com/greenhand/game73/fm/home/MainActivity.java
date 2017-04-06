@@ -11,6 +11,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.greenhand.game73.R;
+import com.greenhand.game73.fm.home.product.ProductFragment;
 import com.greenhand.game73.okhttp.OkHttpUtils;
 
 /**
